@@ -59,13 +59,16 @@ const MultiSelectBox = React.forwardRef<HTMLDivElement, MultiSelectBoxProps>((pr
   const [selectedValue, setSelectedValue] = useInternalState(defaultValue, value);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const selectedItems = selectedValue ?? [];
-  const hasSelection = selectedItems.length > 0;
-  const displayText = hasSelection ? `${selectedItems.length} Selected` : placeholder;
 
   const options = React.Children.map(children, (child: { props: MultiSelectBoxItemProps }) => ({
     ...child.props,
   }));
+  
+  const selectedItems = selectedValue ?? [];
+  const hasSelection = selectedItems.length > 0;
+  const hasSelectedAll = selectedItems.length === options.length;
+  const displayText = hasSelection ? (hasSelectedAll ? `All (${selectedItems.length})` : `${selectedItems.length} Selected`) : placeholder;
+  
   const filteredOptions = getFilteredOptions(searchQuery, options);
   const filteredOptionTexts = new Set(filteredOptions.map((option) => option.text ?? option.value));
   const filteredOptionValues = filteredOptions.map((option) => option.value);
